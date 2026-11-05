@@ -1,0 +1,144 @@
+<!-- To list one student data -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Student - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="portal-card">
+        <header class="portal-header">
+            <div class="portal-badge">Student Lookup</div>
+            <h1>SEARCH STUDENT</h1>
+            <p class="subtitle">Search and display individual student academic profile by student number.</p>
+        </header>
+
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="list.html" class="nav-link">List Students</a>
+            <a href="listOne.html" class="nav-link active">List Required Student</a>
+            <a href="insert.html" class="nav-link">Insert Student</a>
+            <a href="update.html" class="nav-link">Update Student</a>
+            <a href="delete.html" class="nav-link">Delete Student</a>
+        </nav>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label for="sno" class="form-label">Student Number (ID)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="number" id="sno" class="form-control" placeholder="Enter student roll/ID number" required>
+                    <button class="btn btn-primary" onclick="searchStudent()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>student_id</th>
+                        <th>student_name</th>
+                        <th>class</th>
+                        <th>total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="empty-state">Enter a student number above to inspect records.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <button class="btn btn-secondary" onclick="location.href='index.html'">&larr; Home Page</button>
+        </div>
+
+        <div class="info-banner" style="margin: 1.5rem 0 1.5rem; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius-md); padding: 0.9rem 1.15rem; display: flex; align-items: flex-start; gap: 0.75rem; text-align: left;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <div style="font-size: 0.85rem; color: #3730a3; line-height: 1.45;">
+                <strong>Lookup Notice:</strong> Real-time lookup queries the <code>student</code> table specifically by primary key <code>student_id</code>. If the student does not exist, an instant error alert will be displayed.
+            </div>
+        </div>
+
+        <footer class="portal-footer">
+            &copy; Student Management System (SET-7) &bull; Academic Portal
+        </footer>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script>
+    function searchStudent() {
+        let sno = document.getElementById("sno").value;
+        if (!sno) {
+            window.showToast("Please enter a student number to search", "error");
+            return;
+        }
+
+        fetch("/students/" + sno)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to query student database");
+                }
+                return response.json();
+            })
+            .then(data => {
+                let table = document.getElementById("studentTable");
+                if (data.length === 0) {
+                    window.showToast("Student Not Found", "error");
+                    table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>student_id</th>
+                            <th>student_name</th>
+                            <th>class</th>
+                            <th>total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="empty-state" style="color: var(--danger);">No student record found with ID: ${sno}</td>
+                        </tr>
+                    </tbody>`;
+                    return;
+                }
+
+                table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>student_id</th>
+                        <th>student_name</th>
+                        <th>class</th>
+                        <th>total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>${data[0].student_id}</strong></td>
+                        <td>${data[0].student_name}</td>
+                        <td>${data[0].class || '-'}</td>
+                        <td>${data[0].total}</td>
+                    </tr>
+                </tbody>`;
+                
+                window.showToast("Student record found successfully!", "success");
+            })
+            .catch(error => {
+                console.error("Search error:", error);
+                window.showToast(error.message, "error");
+            });
+    }
+    </script>
+</body>
+</html>

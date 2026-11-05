@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="portal-card">
+        <header class="portal-header">
+            <div class="portal-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                SET-7 Academic Portal
+            </div>
+            <h1>STUDENT MANAGEMENT</h1>
+            <p class="subtitle">Centralized student records, registration, and academic performance administration system.</p>
+        </header>
+
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="list.html" class="nav-link">List Students</a>
+            <a href="listOne.html" class="nav-link">List Required Student</a>
+            <a href="insert.html" class="nav-link">Insert Student</a>
+            <a href="update.html" class="nav-link">Update Student</a>
+            <a href="delete.html" class="nav-link">Delete Student</a>
+        </nav>
+
+        <div class="hero-illustration">
+            <div class="hero-icon-bubble" title="Student Management Portal">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12.5V17c2.5 2.5 9.5 2.5 12 0v-4.5"></path>
+                </svg>
+            </div>
+        </div>
+
+        <section class="actions-grid" aria-label="Student Operations">
+            <!-- 1. List Students -->
+            <button type="button" class="action-card" onclick="location.href='list.html'">
+                <div class="card-badge">1</div>
+                <div class="card-title">List Students</div>
+                <div class="card-desc">View all enrolled student records, roll numbers, and academic marks.</div>
+                <span class="card-cta">Access Records &rarr;</span>
+            </button>
+
+            <!-- 2. List Required Student -->
+            <button type="button" class="action-card" onclick="location.href='listOne.html'">
+                <div class="card-badge">2</div>
+                <div class="card-title">List Required Student</div>
+                <div class="card-desc">Query and inspect a specific student profile using their unique ID.</div>
+                <span class="card-cta">Search Student &rarr;</span>
+            </button>
+
+            <!-- 3. Insert Student -->
+            <button type="button" class="action-card" onclick="location.href='insert.html'">
+                <div class="card-badge">3</div>
+                <div class="card-title">Insert Student</div>
+                <div class="card-desc">Register a new student record into the central MySQL database.</div>
+                <span class="card-cta">Add Student &rarr;</span>
+            </button>
+
+            <!-- 4. Update Student -->
+            <button type="button" class="action-card" onclick="location.href='update.html'">
+                <div class="card-badge">4</div>
+                <div class="card-title">Update Student</div>
+                <div class="card-desc">Modify existing student details, name, or total academic marks.</div>
+                <span class="card-cta">Edit Record &rarr;</span>
+            </button>
+
+            <!-- 5. Delete Student -->
+            <button type="button" class="action-card action-card-danger" onclick="location.href='delete.html'">
+                <div class="card-badge">5</div>
+                <div class="card-title">Delete Student</div>
+                <div class="card-desc">Remove an existing student profile from the database records.</div>
+                <span class="card-cta">Delete Record &rarr;</span>
+            </button>
+        </section>
+
+        <div class="info-banner" style="margin: 1.5rem 0 2rem; background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border: 1px solid #c7d2fe; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; text-align: left;">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: #4f46e5; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div style="font-weight: 700; color: #1e1b4b; font-size: 0.95rem;">MySQL Academic Database (college.student)</div>
+                    <div style="font-size: 0.84rem; color: #4338ca;">Connected to live schema with student_id, student_name, class, and total marks.</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: var(--radius-full); background: #dcfce7; color: #15803d; font-size: 0.78rem; font-weight: 700;">
+                    <span style="width: 7px; height: 7px; border-radius: 50%; background: #16a34a;"></span>
+                    Database Online
+                </span>
+            </div>
+        </div>
+
+        <footer class="portal-footer">
+            &copy; Student Management System (SET-7) &bull; Academic Portal
+        </footer>
+    </main>
+
+    <script src="notifications.js"></script>
+</body>
+
+</html>

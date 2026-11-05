@@ -1,0 +1,103 @@
+<!-- To delete student data-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Student - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="portal-card">
+        <header class="portal-header">
+            <div class="portal-badge" style="color: var(--danger); border-color: var(--danger-border); background: var(--danger-light);">
+                Destructive Action
+            </div>
+            <h1>DELETE STUDENT</h1>
+            <p class="subtitle">Permanently delete a student record from the college database by student ID.</p>
+        </header>
+
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="list.html" class="nav-link">List Students</a>
+            <a href="listOne.html" class="nav-link">List Required Student</a>
+            <a href="insert.html" class="nav-link">Insert Student</a>
+            <a href="update.html" class="nav-link">Update Student</a>
+            <a href="delete.html" class="nav-link active">Delete Student</a>
+        </nav>
+
+        <div class="form-card form-card-danger">
+            <div class="form-group">
+                <label for="sno" class="form-label">Student Number to Delete</label>
+                <input type="number" id="sno" class="form-control" placeholder="Enter ID to remove" required>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                Warning: Once deleted, this student record cannot be recovered.
+            </p>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="deleteStudent()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Delete Student
+                </button>
+            </div>
+        </div>
+
+        <div class="info-banner" style="max-width: 580px; margin: 0 auto 1.5rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-md); padding: 0.9rem 1.15rem; display: flex; align-items: flex-start; gap: 0.75rem; text-align: left;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div style="font-size: 0.85rem; color: #991b1b; line-height: 1.45;">
+                <strong>Irreversible Operation:</strong> Deleting a student removes their entire academic record from MySQL. Double check the Student ID with the <a href="list.html" style="color: #b91c1c; font-weight: 700; text-decoration: underline;">Student Roster</a> before proceeding.
+            </div>
+        </div>
+
+        <footer class="portal-footer">
+            &copy; Student Management System (SET-7) &bull; Academic Portal
+        </footer>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script>
+    function deleteStudent() {
+        let sno = document.getElementById("sno").value.trim();
+
+        if (!sno) {
+            window.showToast("Please enter a student number to delete", "error");
+            return;
+        }
+
+        if (!confirm("Are you sure you want to delete this student record?")) {
+            return;
+        }
+
+        fetch("/students/" + sno, {
+            method: "DELETE"
+        })
+        .then(response => {
+            if (response.ok) {
+                // Database confirmed deletion of affected row
+                redirectWithToast("index.html", "Student deleted successfully!", "success");
+                return;
+            }
+
+            return response.text().then(message => {
+                throw new Error(message || "Failed to delete student");
+            });
+        })
+        .catch(error => {
+            console.error("Delete error:", error);
+            // In case of 404 "Student NOT found to delete", show error notification
+            window.showToast(error.message, "error");
+        });
+    }
+    </script>
+</body>
+</html>

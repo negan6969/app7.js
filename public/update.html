@@ -1,0 +1,119 @@
+<!-- UPDATE STUDENT DETAILS-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="portal-card">
+        <header class="portal-header">
+            <div class="portal-badge">Record Update</div>
+            <h1>UPDATE STUDENT</h1>
+            <p class="subtitle">Modify student name or total academic marks for an existing record.</p>
+        </header>
+
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="list.html" class="nav-link">List Students</a>
+            <a href="listOne.html" class="nav-link">List Required Student</a>
+            <a href="insert.html" class="nav-link">Insert Student</a>
+            <a href="update.html" class="nav-link active">Update Student</a>
+            <a href="delete.html" class="nav-link">Delete Student</a>
+        </nav>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label for="sno" class="form-label">Student Number (Target ID)</label>
+                <input type="number" id="sno" class="form-control" placeholder="e.g. 101" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">Updated Student Name</label>
+                <input type="text" id="name" class="form-control" placeholder="e.g. Alice Johnson" required>
+            </div>
+
+            <div class="form-group">
+                <label for="class" class="form-label">Updated Class</label>
+                <input type="text" id="class" class="form-control" placeholder="e.g. CSE-A / 10th / B.Tech III" required>
+            </div>
+
+            <div class="form-group">
+                <label for="total" class="form-label">Updated Total Marks</label>
+                <input type="number" id="total" class="form-control" placeholder="e.g. 480" required>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateStudent()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Update Student
+                </button>
+            </div>
+        </div>
+
+        <div class="info-banner" style="max-width: 580px; margin: 0 auto 1.5rem; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius-md); padding: 0.9rem 1.15rem; display: flex; align-items: flex-start; gap: 0.75rem; text-align: left;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div style="font-size: 0.85rem; color: #3730a3; line-height: 1.45;">
+                <strong>Record Update Policy:</strong> Enter the target student's existing ID number. Updating replaces the stored student name, class, and cumulative marks for that record in the college database.
+            </div>
+        </div>
+
+        <footer class="portal-footer">
+            &copy; Student Management System (SET-7) &bull; Academic Portal
+        </footer>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script>
+    function updateStudent() {
+        let sno = document.getElementById("sno").value.trim();
+        let name = document.getElementById("name").value.trim();
+        let studentClass = document.getElementById("class").value.trim();
+        let total = document.getElementById("total").value.trim();
+
+        if (!sno || !name || !studentClass || !total) {
+            window.showToast("Please fill out all fields before updating", "error");
+            return;
+        }
+
+        fetch("/students/" + sno, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                class: studentClass,
+                total: total
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Confirmed database updated affected row
+                redirectWithToast("index.html", "Student updated successfully!", "success");
+                return;
+            }
+
+            return response.text().then(message => {
+                throw new Error(message || "Failed to update student");
+            });
+        })
+        .catch(error => {
+            console.error("Update error:", error);
+            // In case of 404 "Student NOT found", show clear error notification
+            window.showToast(error.message, "error");
+        });
+    }
+    </script>
+</body>
+</html>

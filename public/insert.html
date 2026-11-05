@@ -1,0 +1,119 @@
+<!--To insert student data-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Student - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="portal-card">
+        <header class="portal-header">
+            <div class="portal-badge">Registration</div>
+            <h1>INSERT STUDENT</h1>
+            <p class="subtitle">Enroll a new student into the college student records system.</p>
+        </header>
+
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="list.html" class="nav-link">List Students</a>
+            <a href="listOne.html" class="nav-link">List Required Student</a>
+            <a href="insert.html" class="nav-link active">Insert Student</a>
+            <a href="update.html" class="nav-link">Update Student</a>
+            <a href="delete.html" class="nav-link">Delete Student</a>
+        </nav>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label for="sno" class="form-label">Student Number</label>
+                <input type="number" id="sno" class="form-control" placeholder="e.g. 101" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">Student Name</label>
+                <input type="text" id="name" class="form-control" placeholder="e.g. Alice Johnson" required>
+            </div>
+
+            <div class="form-group">
+                <label for="class" class="form-label">Class</label>
+                <input type="text" id="class" class="form-control" placeholder="e.g. CSE-A / 10th / B.Tech III" required>
+            </div>
+
+            <div class="form-group">
+                <label for="total" class="form-label">Total Marks</label>
+                <input type="number" id="total" class="form-control" placeholder="e.g. 450" required>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="location.href='index.html'">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveStudent()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Student
+                </button>
+            </div>
+        </div>
+
+        <div class="info-banner" style="max-width: 580px; margin: 0 auto 1.5rem; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: var(--radius-md); padding: 0.9rem 1.15rem; display: flex; align-items: flex-start; gap: 0.75rem; text-align: left;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <div style="font-size: 0.85rem; color: #3730a3; line-height: 1.45;">
+                <strong>Enrollment Guidelines:</strong> Ensure the <em>Student Number (ID)</em> is unique before submitting. All fields (Roll No, Name, Class & Total Marks) are verified and written into the permanent MySQL database.
+            </div>
+        </div>
+
+        <footer class="portal-footer">
+            &copy; Student Management System (SET-7) &bull; Academic Portal
+        </footer>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script>
+    function saveStudent() {
+        let sno = document.getElementById("sno").value.trim();
+        let name = document.getElementById("name").value.trim();
+        let studentClass = document.getElementById("class").value.trim();
+        let total = document.getElementById("total").value.trim();
+
+        if (!sno || !name || !studentClass || !total) {
+            window.showToast("Please fill out all fields before submitting", "error");
+            return;
+        }
+
+        fetch("/students", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                sno: sno,
+                name: name,
+                class: studentClass,
+                total: total
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Verified database confirmed insertion
+                redirectWithToast("index.html", "Student inserted successfully!", "success");
+                return;
+            }
+            return response.text().then(message => {
+                throw new Error(message || "Failed to insert student record");
+            });
+        })
+        .catch(error => {
+            console.error("Insert error:", error);
+            window.showToast(error.message, "error");
+        });
+    }
+    </script>
+</body>
+</html>
